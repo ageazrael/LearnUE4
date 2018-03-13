@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/UObject.h"
+#include "UObject/Object.h"
 #include "UObject/ObjectMacros.h"
 
 #include "TextAsset.generated.h"

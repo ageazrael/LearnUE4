@@ -40,6 +40,7 @@ public class TextAssetEditor : ModuleRules
                 "Core",
                 "CoreUObject",
                 "TextAsset",
+                "UnrealEd",
 				// "Engine",
 				// "Slate",
 				// "SlateCore",
