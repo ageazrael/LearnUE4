@@ -2,25 +2,24 @@
 
 using UnrealBuildTool;
 
-public class TextAssetEditor : ModuleRules
+public class TextAssetEditorUObject : ModuleRules
 {
-    public TextAssetEditor(ReadOnlyTargetRules Target) : base(Target)
+    public TextAssetEditorUObject(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicIncludePaths.AddRange( new string[] {
-                "TextAssetEditor/Public"
+        PublicIncludePaths.AddRange(new string[] {
+                "TextAssetEditorUObject/Public"
 				// ... add public include paths required here ...
 			});
-        PrivateIncludePaths.AddRange( new string[] {
-                "TextAssetEditor/Private",
+        PrivateIncludePaths.AddRange(new string[] {
+                "TextAssetEditorUObject/Private",
 				// ... add other private include paths required here ...
 			});
 
 
         PublicDependencyModuleNames.AddRange(new string[] {
                 "Core",
-                "TextAssetEditorUObject",
 				// ... add other public dependencies that you statically link with here ...
 			});
         PrivateDependencyModuleNames.AddRange(new string[] {
@@ -28,19 +27,14 @@ public class TextAssetEditor : ModuleRules
                 "Core",
                 "CoreUObject",
                 "TextAsset",
+                "Settings",
+                "Slate",
+                "SlateCore",
                 "UnrealEd",
-				"Engine",
-                "EditorStyle",
-				"Slate",
-				"SlateCore",
-                "Projects",
-                
 				// ... add private dependencies that you statically link with here ...	
 			});
 
-        DynamicallyLoadedModuleNames.AddRange( new string[] {
-                "AssetTools",
-                "MainFrame",
+        DynamicallyLoadedModuleNames.AddRange(new string[] {
 				// ... add any modules that your module loads dynamically here ...
 			});
     }

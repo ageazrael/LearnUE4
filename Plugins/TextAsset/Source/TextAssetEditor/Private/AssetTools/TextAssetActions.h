@@ -11,7 +11,7 @@ class FTextAssetActions
 	: public FAssetTypeActions_Base
 {
 public:
-	FTextAssetActions(/*const TSharedRef<ISlateStyle>& InSlateType*/);
+	FTextAssetActions(const TSharedRef<ISlateStyle>& InSlateType);
 
 public:
 	virtual bool CanFilter()override;
@@ -26,5 +26,5 @@ public:
 	virtual class UThumbnailInfo* GetThumbnailInfo(UObject* Asset) const override;
 
 private:
-	TSharedPtr<ISlateStyle> Style;
+	TSharedRef<ISlateStyle> Style;
 };

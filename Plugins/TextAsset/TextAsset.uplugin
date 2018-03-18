@@ -10,19 +10,24 @@
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
-	"CanContainContent": true,
+	"CanContainContent": false,
 	"IsBetaVersion": false,
 	"Installed": false,
-  "Modules": [
+	"Modules": [
     {
       "Name": "TextAsset",
       "Type": "Developer",
       "LoadingPhase": "Default"
     },
     {
-      "Name": "TextAssetEditor",
+      "Name": "TextAssetEditorUObject",
       "Type": "Editor",
       "LoadingPhase": "Default"
-    }
-  ]
+    },
+		{
+			"Name": "TextAssetEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
 }

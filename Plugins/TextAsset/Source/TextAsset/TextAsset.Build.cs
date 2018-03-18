@@ -8,48 +8,30 @@ public class TextAsset : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
-		PublicIncludePaths.AddRange(
-			new string[] {
+		PublicIncludePaths.AddRange(new string[] {
 				"TextAsset/Public"
 				// ... add public include paths required here ...
-			}
-			);
-				
-		
-		PrivateIncludePaths.AddRange(
-			new string[] {
+			});
+		PrivateIncludePaths.AddRange(new string[] {
 				"TextAsset/Private",
 				// ... add other private include paths required here ...
-			}
-			);
+			});
 			
 		
-		PublicDependencyModuleNames.AddRange(
-			new string[]
-			{
+		PublicDependencyModuleNames.AddRange(new string[] {
 				"Core",
 				// ... add other public dependencies that you statically link with here ...
-			}
-			);
-			
-		
-		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
+			});
+		PrivateDependencyModuleNames.AddRange(new string[] {
 				"CoreUObject",
-				// "Engine",
-				// "Slate",
-				// "SlateCore",
-				// ... add private dependencies that you statically link with here ...	
-			}
-			);
-		
-		
-		DynamicallyLoadedModuleNames.AddRange(
-			new string[]
-			{
+                // "Engine",
+                // "Slate",
+                // "SlateCore",
+                // ... add private dependencies that you statically link with here ...	
+            });
+
+        DynamicallyLoadedModuleNames.AddRange(new string[] {
 				// ... add any modules that your module loads dynamically here ...
-			}
-			);
+			});
 	}
 }

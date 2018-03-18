@@ -2,15 +2,33 @@
 
 #include "TextAsset.h"
 
+#include "ISettingsModule.h"
+#include "ISettingsSection.h"
 #include "ModuleManager.h"
 #include "Templates/SharedPointer.h"
 #include "AssetTools/TextAssetActions.h"
+#include "Styles/TextAssetEditorStyle.h"
 
+
+///
+/// Module分离出UObject这样可以通过Hotload实现模块的动态加载与卸载
+///
 #define LOCTEXT_NAMESPACE "FTextAssetEditorModule"
 class FTextAssetEditorModule
 	: public IModuleInterface
+	, public IHasMenuExtensibility
+	, public IHasToolBarExtensibility
 {
 public:
+
+	virtual TSharedPtr<FExtensibilityManager> GetMenuExtensibilityManager() override
+	{
+		return MenuExtensibilityManager;
+	}
+	virtual TSharedPtr<FExtensibilityManager> GetToolBarExtensibilityManager() override
+	{
+		return ToolBarExtensibilityManager;
+	}
 
 	/** IModuleInterface implementation */
 	virtual void StartupModule() override
@@ -19,9 +37,14 @@ public:
 
 		IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
 
-		auto TextAssetActions = MakeShareable(new FTextAssetActions());
+		Style = MakeShareable(new FTextAssetEditorStyle());
+
+		auto TextAssetActions = MakeShareable(new FTextAssetActions(Style.ToSharedRef()));
 		AssetTools.RegisterAssetTypeActions(TextAssetActions);
 		RegisteredAssetTypeActions.Add(TextAssetActions);
+
+		MenuExtensibilityManager = MakeShareable(new FExtensibilityManager);
+		ToolBarExtensibilityManager = MakeShareable(new FExtensibilityManager);
 	}
 	virtual void ShutdownModule() override
 	{
@@ -39,11 +62,17 @@ public:
 		}
 
 		RegisteredAssetTypeActions.Empty();
+
+		MenuExtensibilityManager.Reset();
+		ToolBarExtensibilityManager.Reset();
 	}
 
 protected:
-	TArray<TSharedRef<IAssetTypeActions>> RegisteredAssetTypeActions;
-	TSharedPtr<ISlateStyle> Style;
+	TArray<TSharedRef<IAssetTypeActions>>	RegisteredAssetTypeActions;
+	TSharedPtr<ISlateStyle>					Style;
+
+	TSharedPtr<FExtensibilityManager>		MenuExtensibilityManager;
+	TSharedPtr<FExtensibilityManager>		ToolBarExtensibilityManager;
 };
 
 #undef LOCTEXT_NAMESPACE

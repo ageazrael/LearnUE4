@@ -3,13 +3,13 @@
 #include "Framework/MultiBox/MultiBoxBuilder.h"
 #include "TextAsset.h"
 #include "Styling/SlateStyle.h"
+#include "Toolkits/TextAssetEditorToolkit.h"
 
 #define LOCTEXT_NAMESPACE "AssetTypeActions"
 
-FTextAssetActions::FTextAssetActions(/*const TSharedRef<ISlateStyle>& InStyle*/)
-//	: Style(InStyle)
+FTextAssetActions::FTextAssetActions(const TSharedRef<ISlateStyle>& InStyle)
+	: Style(InStyle)
 {
-
 }
 
 bool FTextAssetActions::CanFilter()
@@ -20,6 +20,34 @@ bool FTextAssetActions::CanFilter()
 void FTextAssetActions::GetActions(const TArray<UObject*>& InObjects, FMenuBuilder& MenuBuilder)
 {
 	FAssetTypeActions_Base::GetActions(InObjects, MenuBuilder);
+
+	auto TextAssets = GetTypedWeakObjectPtrs<UTextAsset>(InObjects);
+
+	MenuBuilder.AddMenuEntry(
+		LOCTEXT("TextAsset_ReverseText", "Reverse Text"),
+		LOCTEXT("TextAsset_ReverseTextToolTip", "Reverse the text stored in the selected text asset(s)."),
+		FSlateIcon(),
+		FUIAction(
+			FExecuteAction::CreateLambda([=] {
+				for (auto& TextAsset : TextAssets)
+				{
+					if (TextAsset.IsValid() && !TextAsset->Text.IsEmpty())
+					{
+						TextAsset->Text = FText::FromString(TextAsset->Text.ToString().Reverse());
+						TextAsset->PostEditChange();
+						TextAsset->MarkPackageDirty();
+					}
+				}
+			}),
+			FCanExecuteAction::CreateLambda([=] {
+				for (auto& TextAsset : TextAssets)
+				{
+					if (TextAsset.IsValid() && !TextAsset->Text.IsEmpty())
+						return true;
+				}
+				return false;
+			})
+		));
 }
 
 uint32 FTextAssetActions::GetCategories()
@@ -47,9 +75,21 @@ bool FTextAssetActions::HasActions(const TArray<UObject*>& InObjects) const
 	return true;
 }
 
-void FTextAssetActions::OpenAssetEditor(const TArray<UObject*>& InObjects, TSharedPtr<IToolkitHost> EditWithinLevelEditor)
+void FTextAssetActions::OpenAssetEditor(const TArray<UObject*>& InObjects, TSharedPtr<IToolkitHost> InEditWithinLevelEditor)
 {
-	FAssetTypeActions_Base::OpenAssetEditor(InObjects, EditWithinLevelEditor);
+	EToolkitMode::Type Mode = InEditWithinLevelEditor.IsValid()
+		? EToolkitMode::WorldCentric
+		: EToolkitMode::Standalone;
+
+	for (auto ObjIt = InObjects.CreateConstIterator(); ObjIt; ++ObjIt)
+	{
+		auto TextAsset = Cast<UTextAsset>(*ObjIt);
+		if (TextAsset != nullptr)
+		{
+			TSharedRef<FTextAssetEditorToolkit> EditorToolkit = MakeShareable(new FTextAssetEditorToolkit(Style));
+			EditorToolkit->Initialize(TextAsset, Mode, InEditWithinLevelEditor);
+		}
+	}
 }
 
 class UThumbnailInfo* FTextAssetActions::GetThumbnailInfo(UObject* Asset) const
